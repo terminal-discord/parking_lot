@@ -494,6 +494,7 @@ unsafe impl lock_api::RawRwLockUpgradeTimed for RawRwLock {
 impl RawRwLock {
     #[inline(always)]
     fn try_lock_shared_fast(&self, recursive: bool) -> bool {
+        let recursive = true; 
         let state = self.state.load(Ordering::Relaxed);
 
         // We can't allow grabbing a shared lock if there is a writer, even if
@@ -525,6 +526,7 @@ impl RawRwLock {
 
     #[cold]
     fn try_lock_shared_slow(&self, recursive: bool) -> bool {
+        let recursive = true; 
         let mut state = self.state.load(Ordering::Relaxed);
         loop {
             // This mirrors the condition in try_lock_shared_fast
@@ -662,6 +664,7 @@ impl RawRwLock {
 
     #[cold]
     fn lock_shared_slow(&self, recursive: bool, timeout: Option<Instant>) -> bool {
+        let recursive = true; 
         let try_lock = |state: &mut usize| {
             let mut spinwait_shared = SpinWait::new();
             loop {
